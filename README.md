@@ -4,7 +4,7 @@
 
 Official website for KIRA IMPORTS - your trusted partner for importing quality products from China & USA to Kenya.
 
-Last updated: 2026-04-06 18:49:13
+Last updated: 2026-04-06 20:41:08
 
 ## 🌐 Live Website
 
@@ -12,9 +12,9 @@ Last updated: 2026-04-06 18:49:13
 
 ## 📞 Contact
 
-- **WhatsApp:** +254 992 821 856
-- **Phone:** +254 792 821 836
-- **Email:** kiraimports@gmail.com
+- **WhatsApp:** +254792821836
+- **Phone:** +254792821836
+- **Email:** kiraimports6@gmail.com
 - **Instagram:** @kira_imports_
 - **TikTok:** @kira.imports_
 - **Facebook:** Kira Imports
