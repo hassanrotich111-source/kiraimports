@@ -204,16 +204,6 @@ function App() {
             onClose={() => setShowPurchaseModal(false)}
           />
         )}
-
-        {/* Request Product Modal */}
-        {showRequestModal && (
-          <RequestProductModal
-            onClose={() => setShowRequestModal(false)}
-          />
-        )}
-
-        {/* Install App Prompt */}
-        <InstallPrompt />
       </div>
     );
   }
@@ -254,8 +244,9 @@ function App() {
 
   // Home page
   return (
-    <div ref={mainRef} className="relative min-h-screen">
-      {/* Global Background - Fixed for all sections */}
+    <>
+      <div ref={mainRef} className="relative min-h-screen">
+        {/* Global Background - Fixed for all sections */}
       {(() => {
         const opacity = backgroundSettings.overlayOpacity / 100;
         return (
@@ -328,6 +319,17 @@ function App() {
       )}
 
     </div>
+
+    {/* Request Product Modal - outside mainRef container */}
+    {showRequestModal && (
+      <RequestProductModal
+        onClose={() => setShowRequestModal(false)}
+      />
+    )}
+
+    {/* Install App Prompt */}
+    <InstallPrompt />
+  </>
   );
 }
 
