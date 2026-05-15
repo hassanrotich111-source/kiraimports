@@ -202,15 +202,15 @@ export default function InstallBanner() {
                     </div>
                   </div>
                 </>
-              ) : (
+              ) : /Android/i.test(navigator.userAgent) ? (
                 <>
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 bg-[#E91E8C]/10 rounded-full flex items-center justify-center flex-shrink-0">
                       <Smartphone className="w-4 h-4 text-[#E91E8C]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-[#0a1f3d] text-sm">Chrome / Android</p>
-                      <p className="text-[#5a6a7a] text-sm">Tap the menu (3 dots) → <strong>&quot;Install app&quot;</strong> or <strong>&quot;Add to Home Screen&quot;</strong></p>
+                      <p className="font-semibold text-[#0a1f3d] text-sm">Chrome</p>
+                      <p className="text-[#5a6a7a] text-sm">Tap menu (3 dots) → <strong>&quot;Install app&quot;</strong></p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -220,6 +220,27 @@ export default function InstallBanner() {
                     <div>
                       <p className="font-semibold text-[#0a1f3d] text-sm">Samsung Internet</p>
                       <p className="text-[#5a6a7a] text-sm">Tap menu → <strong>&quot;Add page to&quot;</strong> → <strong>&quot;Home screen&quot;</strong></p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-[#E91E8C]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Smartphone className="w-4 h-4 text-[#E91E8C]" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-[#0a1f3d] text-sm">Chrome / Edge (Desktop)</p>
+                      <p className="text-[#5a6a7a] text-sm">Click the <strong>install icon</strong> in the address bar → <strong>&quot;Install&quot;</strong></p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-[#E91E8C]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Smartphone className="w-4 h-4 text-[#E91E8C]" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-[#0a1f3d] text-sm">Or use the menu</p>
+                      <p className="text-[#5a6a7a] text-sm">Click <strong>⋮</strong> (3 dots) → <strong>&quot;Install KIRA IMPORTS&quot;</strong> or <strong>&quot;Apps&quot;</strong> → <strong>&quot;Install this site as an app&quot;</strong></p>
                     </div>
                   </div>
                 </>
