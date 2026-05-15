@@ -16,6 +16,7 @@ import useLenis from './hooks/useLenis';
 import Navigation from './components/Navigation';
 import PurchaseModal from './components/PurchaseModal';
 import RequestProductModal from './components/RequestProductModal';
+import InstallBanner from './components/InstallBanner';
 
 // Sections
 import Hero from './sections/Hero';
@@ -332,6 +333,9 @@ function App() {
         onClose={() => setShowRequestModal(false)}
       />
     )}
+
+    {/* Install App Banner & Button */}
+    <InstallBanner />
 
   </>
   );
