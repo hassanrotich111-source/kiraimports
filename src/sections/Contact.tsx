@@ -1,40 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { visitConfig, companyInfo } from '../config';
+import { visitConfig } from '../config';
 import { Phone, Mail, Clock, MapPin, Send } from 'lucide-react';
+import { useCompanySettings } from '../hooks/useCompanySettings';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Default contact info
-const defaultContactInfo = {
-  phone: '+254792821836',
-  whatsapp: '+254792821836',
-  email: 'kiraimports6@gmail.com',
-  address: 'Nairobi, Kenya',
-  hours: 'Mon–Sat, 8:00–18:00 EAT',
-  instagram: 'kiraimports',
-  tiktok: 'kiraimports',
-  facebook: 'kiraimports',
-};
 
 export default function Contact() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', productInterest: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [contactInfo, setContactInfo] = useState(defaultContactInfo);
+  const { settings: contactInfo } = useCompanySettings();
 
   useEffect(() => {
-    // Load custom contact info from localStorage
-    const saved = localStorage.getItem('kiraimports_contact');
-    if (saved) {
-      try {
-        setContactInfo(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to load contact info:', e);
-      }
-    }
 
     const section = sectionRef.current;
     if (!section) return;
@@ -66,7 +46,7 @@ export default function Contact() {
       const message = `*NEW INQUIRY FROM KIRA IMPORTS WEBSITE*\n\n*Name:* ${formData.name}\n*Email:* ${formData.email}\n*Phone:* ${formData.phone}\n*Product Interest:* ${formData.productInterest}\n*Message:* ${formData.message}\n\nPlease contact me.`;
       
       window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
-      window.location.href = `mailto:${companyInfo.email}?subject=${encodeURIComponent(`New Inquiry from ${formData.name}`)}&body=${encodeURIComponent(message)}`;
+      window.location.href = `mailto:${contactInfo.email}?subject=${encodeURIComponent(`New Inquiry from ${formData.name}`)}&body=${encodeURIComponent(message)}`;
       
       setTimeout(() => {
         setSubmitted(false);
