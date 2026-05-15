@@ -315,3 +315,36 @@ export const saveTestimonials = async (testimonials: any[], token: string) => {
 
 // Health check
 export const checkHealth = () => fetchAPI('/health');
+
+// Company Settings
+export const getCompanySettings = async () => {
+  try {
+    const response = await fetch(`${API_URL}/company`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) throw new Error('Failed to fetch company settings');
+    return await response.json();
+  } catch (err) {
+    console.error('Error fetching company settings:', err);
+    return null;
+  }
+};
+
+export const updateCompanySettings = async (settings: any, token: string) => {
+  try {
+    const response = await fetch(`${API_URL}/company`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(settings),
+    });
+    if (!response.ok) throw new Error('Failed to update company settings');
+    return await response.json();
+  } catch (err) {
+    console.error('Error updating company settings:', err);
+    throw err;
+  }
+};
