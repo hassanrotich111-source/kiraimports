@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, ShoppingCart, MessageCircle, Minus, Plus, CheckCircle, Copy, User, Phone } from 'lucide-react';
+import { X, ShoppingCart, MessageCircle, Mail, Minus, Plus, CheckCircle, Copy, User, Phone } from 'lucide-react';
 import type { Product } from '../App';
 import { companyInfo } from '../config';
 
@@ -83,6 +83,19 @@ export default function PurchaseModal({ product, onClose }: PurchaseModalProps) 
         copyToClipboard(message);
       }
     }
+    setOrderSent(true);
+  };
+
+  // Send Order via Email
+  const handleEmailOrder = () => {
+    if (!validateCustomerDetails()) return;
+
+    const message = generateOrderMessage();
+    const subject = encodeURIComponent(`New Order - ${product.name} from ${customerName}`);
+    const body = encodeURIComponent(message);
+    const mailtoUrl = `mailto:${companyInfo.email}?subject=${subject}&body=${body}`;
+
+    window.location.href = mailtoUrl;
     setOrderSent(true);
   };
 
@@ -252,6 +265,15 @@ export default function PurchaseModal({ product, onClose }: PurchaseModalProps) 
             >
               <MessageCircle className="w-5 h-5" />
               <span>Send Order via WhatsApp</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleEmailOrder}
+              className="w-full py-3.5 bg-[#1E63AF] text-white rounded-xl font-semibold hover:bg-[#154a85] transition-colors flex items-center justify-center gap-2"
+            >
+              <Mail className="w-5 h-5" />
+              <span>Send Order via Email</span>
             </button>
 
             <button
