@@ -5,7 +5,7 @@ import {
   Type, Quote, Clock, Play
 } from 'lucide-react';
 import { gsap } from 'gsap';
-import { getImages, uploadImage, getProducts, createProduct, updateProduct, deleteProduct, getTestimonials, saveTestimonials, uploadVideo } from '../services/api';
+import { getImages, uploadImage, getProducts, createProduct, updateProduct, deleteProduct, getTestimonials, saveTestimonials, uploadVideo, getCompanySettings, updateCompanySettings } from '../services/api';
 import type { Product, BackgroundSettings } from '../App';
 
 interface AdminPanelProps {
@@ -258,8 +258,24 @@ export default function AdminPanel({
       console.error('Backend testimonials error:', err);
     }
     
-    const savedContact = localStorage.getItem('kiraimports_contact');
-    if (savedContact) setContactInfo(JSON.parse(savedContact));
+    // Load contact info from backend (so admin sees what's live)
+    try {
+      const backendContact = await getCompanySettings();
+      if (backendContact) {
+        setContactInfo({
+          phone: backendContact.phone || contactInfo.phone,
+          whatsapp: backendContact.whatsapp || contactInfo.whatsapp,
+          email: backendContact.email || contactInfo.email,
+          address: backendContact.address || contactInfo.address,
+          hours: backendContact.hours || contactInfo.hours,
+          instagram: backendContact.instagram || contactInfo.instagram,
+          tiktok: backendContact.tiktok || contactInfo.tiktok,
+          facebook: backendContact.facebook || contactInfo.facebook,
+        });
+      }
+    } catch (err) {
+      console.log('Loading from backend failed, using defaults');
+    }
     
     const savedHeroText = localStorage.getItem('kiraimports_hero_text');
     if (savedHeroText) setHeroText(JSON.parse(savedHeroText));
@@ -320,9 +336,14 @@ export default function AdminPanel({
   };
 
   // Save functions
-  const saveContactInfo = () => {
-    localStorage.setItem('kiraimports_contact', JSON.stringify(contactInfo));
-    alert('Contact info saved!');
+  const saveContactInfo = async () => {
+    try {
+      const token = localStorage.getItem('kiraimports_admin_token') || '';
+      await updateCompanySettings(contactInfo, token);
+      alert('Contact info saved to server! It will show on all devices.');
+    } catch (err: any) {
+      alert('Failed to save: ' + (err.message || 'Check backend connection'));
+    }
   };
 
   const saveHeroText = () => {
