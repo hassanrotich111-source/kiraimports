@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { createPortal } from 'react-dom';
-import { X, MessageCircle, Search, CheckCircle, User, Phone, Tag, FileText } from 'lucide-react';
+import { X, MessageCircle, Mail, Search, CheckCircle, User, Phone, Tag, FileText } from 'lucide-react';
 import { companyInfo } from '../config';
 
 interface RequestProductModalProps {
@@ -42,27 +41,47 @@ export default function RequestProductModal({ onClose }: RequestProductModalProp
     setRequestSent(true);
   };
 
+  // Send Request via Email
+  const handleEmailRequest = () => {
+    if (!validate()) return;
+
+    const message = `*PRODUCT REQUEST - KIRA IMPORTS*\n\n` +
+      `*Customer Details:*\n` +
+      `Name: ${customerName}\n` +
+      `Phone: ${customerPhone}\n\n` +
+      `*Product Requested:*\n` +
+      `Product Name: ${productName}\n` +
+      `Description: ${productDescription || 'No additional details'}\n\n` +
+      `I could not find this product in your shop. Please let me know if you can source it.`;
+
+    const subject = encodeURIComponent(`Product Request - ${productName} from ${customerName}`);
+    const body = encodeURIComponent(message);
+    const mailtoUrl = `mailto:${companyInfo.email}?subject=${subject}&body=${body}`;
+
+    window.location.href = mailtoUrl;
+    setRequestSent(true);
+  };
+
   if (requestSent) {
-    return createPortal(
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    return (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999}}>
         <div className="absolute inset-0 bg-[#0a1f3d]/60 backdrop-blur-sm" onClick={onClose} />
         <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 text-center">
           <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-[#0a1f3d] mb-2">Request Sent!</h2>
-          <p className="text-[#5a6a7a] mb-6">We will look for "{productName}" and get back to you within 24 hours.</p>
+          <p className="text-[#5a6a7a] mb-6">We will look for &quot;{productName}&quot; and get back to you within 24 hours.</p>
           <button onClick={onClose} className="w-full py-3 bg-[#E91E8C] text-white rounded-xl font-semibold hover:bg-[#C41675] transition-colors">
             Close
           </button>
         </div>
-      </div>,
-      document.body
+      </div>
     );
   }
 
-  return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999}}>
       <div className="absolute inset-0 bg-[#0a1f3d]/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         {/* Header */}
@@ -154,21 +173,31 @@ export default function RequestProductModal({ onClose }: RequestProductModalProp
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={handleWhatsAppRequest}
-            className="w-full py-3.5 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-          >
-            <MessageCircle className="w-5 h-5" />
-            <span>Send Request via WhatsApp</span>
-          </button>
+          <div className="space-y-2.5">
+            <button
+              type="button"
+              onClick={handleWhatsAppRequest}
+              className="w-full py-3.5 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
+            >
+              <MessageCircle className="w-5 h-5" />
+              <span>Send Request via WhatsApp</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleEmailRequest}
+              className="w-full py-3.5 bg-[#1E63AF] text-white rounded-xl font-semibold hover:bg-[#154a85] transition-colors flex items-center justify-center gap-2"
+            >
+              <Mail className="w-5 h-5" />
+              <span>Send Request via Email</span>
+            </button>
+          </div>
 
           <p className="text-center text-xs text-[#5a6a7a]">
             We will search for this product and contact you within 24 hours with pricing and availability.
           </p>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
