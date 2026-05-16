@@ -885,9 +885,9 @@ export default function AdminPanel({
               <div className="border-t pt-4">
                 <h3 className="font-semibold text-gray-900 mb-4">Social Media</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <Input label="Instagram" value={contactInfo.instagram} onChange={(e: any) => setContactInfo({...contactInfo, instagram: e.target.value})} placeholder="username" />
-                  <Input label="TikTok" value={contactInfo.tiktok} onChange={(e: any) => setContactInfo({...contactInfo, tiktok: e.target.value})} placeholder="username" />
-                  <Input label="Facebook" value={contactInfo.facebook} onChange={(e: any) => setContactInfo({...contactInfo, facebook: e.target.value})} placeholder="username" />
+                  <Input label="Instagram" value={contactInfo.instagram} onChange={(e: any) => setContactInfo({...contactInfo, instagram: e.target.value})} placeholder="https://instagram.com/yourprofile" />
+                  <Input label="TikTok" value={contactInfo.tiktok} onChange={(e: any) => setContactInfo({...contactInfo, tiktok: e.target.value})} placeholder="https://tiktok.com/@yourprofile" />
+                  <Input label="Facebook" value={contactInfo.facebook} onChange={(e: any) => setContactInfo({...contactInfo, facebook: e.target.value})} placeholder="https://facebook.com/yourprofile" />
                 </div>
               </div>
 
