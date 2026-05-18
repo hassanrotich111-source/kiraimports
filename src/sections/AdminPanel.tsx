@@ -7,6 +7,7 @@ import {
 import { gsap } from 'gsap';
 import { getImages, uploadImage, getProducts, createProduct, updateProduct, deleteProduct, getTestimonials, saveTestimonials, uploadVideo, getCompanySettings, updateCompanySettings } from '../services/api';
 import type { Product, BackgroundSettings } from '../App';
+import AdminInstallButton from '../components/AdminInstallButton';
 
 interface AdminPanelProps {
   products: Product[];
@@ -894,6 +895,13 @@ export default function AdminPanel({
               <button onClick={saveContactInfo} className="w-full py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 flex items-center justify-center gap-2">
                 <Save className="w-5 h-5" /> Save Contact Info
               </button>
+            </div>
+
+            {/* Install App Section - Admin Only */}
+            <div className="bg-white rounded-xl shadow-sm p-6 mt-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Install App</h2>
+              <p className="text-gray-600 mb-4 text-sm">Install KIRA IMPORTS directly to your phone or computer home screen for quick access.</p>
+              <AdminInstallButton />
             </div>
           </div>
         </div>
