@@ -8,16 +8,14 @@ import {
   MessageCircle,
   MapPin,
   Mail,
-  Phone,
-  Settings
+  Phone
 } from 'lucide-react';
 
 interface FooterProps {
-  onNavigateAdmin?: () => void;
   onNavigateLegal?: (page: 'privacy' | 'terms') => void;
 }
 
-export default function Footer({ onNavigateAdmin, onNavigateLegal }: FooterProps) {
+export default function Footer({ onNavigateLegal }: FooterProps) {
   const marqueeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,12 +33,6 @@ export default function Footer({ onNavigateAdmin, onNavigateLegal }: FooterProps
       animation.kill();
     };
   }, []);
-
-  const handleAdminClick = () => {
-    if (onNavigateAdmin) {
-      onNavigateAdmin();
-    }
-  };
 
   return (
     <footer className="relative w-full bg-transparent" style={{ zIndex: 70 }}>
@@ -172,20 +164,6 @@ export default function Footer({ onNavigateAdmin, onNavigateLegal }: FooterProps
               </button>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Hidden Admin Access - Bottom of page */}
-      <div className="w-full py-3 bg-[#051224] border-t border-white/5">
-        <div className="flex justify-center">
-          <button
-            onClick={handleAdminClick}
-            className="flex items-center gap-2 px-3 py-1.5 text-white/20 hover:text-white/50 transition-colors text-[10px]"
-            title="Admin Access"
-          >
-            <Settings className="w-3 h-3" />
-            <span>Admin</span>
-          </button>
         </div>
       </div>
     </footer>
