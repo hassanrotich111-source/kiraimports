@@ -15,7 +15,6 @@ import useLenis from './hooks/useLenis';
 // Components
 import Navigation from './components/Navigation';
 import PurchaseModal from './components/PurchaseModal';
-import InstallPrompt from './components/InstallPrompt';
 import RequestProductModal from './components/RequestProductModal';
 
 // Sections
@@ -326,9 +325,6 @@ function App() {
         onClose={() => setShowRequestModal(false)}
       />
     )}
-
-    {/* Install App Prompt */}
-    <InstallPrompt />
   </>
   );
 }
