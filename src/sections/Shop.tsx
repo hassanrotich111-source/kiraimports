@@ -4,12 +4,14 @@ import {
   Search, Filter, Grid3X3, List, ShoppingCart, ArrowLeft, 
   Play, Clock, Truck, X, PlusCircle
 } from 'lucide-react';
-import { productCategories } from '../config';
+import { companyInfo, productCategories } from '../config';
 import { getImages } from '../services/api';
 import type { Product } from '../App';
 
 interface ShopProps {
   products: Product[];
+  loading: boolean;
+  error: string;
   onPurchase: (product: Product) => void;
   onRequestProduct: () => void;
   onNavigateHome: () => void;
@@ -109,7 +111,7 @@ function ProductDetailModal({ product, onClose, onPurchase }: { product: Product
   );
 }
 
-export default function Shop({ products, onPurchase, onRequestProduct, onNavigateHome }: ShopProps) {
+export default function Shop({ products, loading, error, onPurchase, onRequestProduct, onNavigateHome }: ShopProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -284,7 +286,28 @@ export default function Shop({ products, onPurchase, onRequestProduct, onNavigat
 
       {/* Products Grid */}
       <div ref={productsRef} className="relative z-10 w-full px-6 lg:px-[7vw]">
-        {filteredProducts.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-20">
+            <ShoppingCart className="w-16 h-16 text-white/50 mx-auto mb-4 animate-pulse" />
+            <h3 className="text-xl font-semibold text-white mb-2">Loading products</h3>
+            <p className="text-white/70">The catalog is loading. This can take a moment if the backend is waking up.</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20">
+            <ShoppingCart className="w-16 h-16 text-white/50 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-white mb-2">Catalog temporarily unavailable</h3>
+            <p className="text-white/70 max-w-xl mx-auto mb-6">{error}</p>
+            <a
+              href={`https://wa.me/${companyInfo.whatsapp.replace(/\s/g, '').replace('+', '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#E91E8C] hover:bg-[#C41675] text-white px-5 py-3 rounded-xl font-semibold transition-colors"
+            >
+              <PlusCircle className="w-5 h-5" />
+              Order on WhatsApp
+            </a>
+          </div>
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center py-20">
             <ShoppingCart className="w-16 h-16 text-white/50 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-white mb-2">No products found</h3>
