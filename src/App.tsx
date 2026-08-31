@@ -16,6 +16,7 @@ import useLenis from './hooks/useLenis';
 import Navigation from './components/Navigation';
 import PurchaseModal from './components/PurchaseModal';
 import RequestProductModal from './components/RequestProductModal';
+import LegalPage from './components/LegalPage';
 
 // Sections
 import Hero from './sections/Hero';
@@ -67,7 +68,7 @@ function App() {
   const mainRef = useRef<HTMLDivElement>(null);
   
   // State for routing
-  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'admin'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'admin' | 'privacy' | 'terms'>('home');
   
   // State for user authentication (optional - details collected at order time)
   const [user, setUser] = useState<User | null>(null);
@@ -88,6 +89,8 @@ function App() {
   
   // State for products - starts empty, admin uploads via backend
   const [products, setProducts] = useState<Product[]>([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productsError, setProductsError] = useState('');
   
   // State for background settings
   const [backgroundSettings, setBackgroundSettings] = useState<BackgroundSettings>({
@@ -100,11 +103,16 @@ function App() {
   // Load products from backend on mount
   useEffect(() => {
     const loadProducts = async () => {
+      setProductsLoading(true);
+      setProductsError('');
       try {
         const backendProducts = await getProducts();
         setProducts(backendProducts);
       } catch (err) {
         console.error('Failed to load products:', err);
+        setProductsError('Products are temporarily unavailable while the catalog service wakes up.');
+      } finally {
+        setProductsLoading(false);
       }
     };
     loadProducts();
@@ -181,6 +189,11 @@ function App() {
     window.scrollTo(0, 0);
   };
 
+  const handleNavigateToLegal = (page: 'privacy' | 'terms') => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
+
   // Render current page
   if (currentPage === 'shop') {
     return (
@@ -193,6 +206,8 @@ function App() {
         />
         <Shop 
           products={products}
+          loading={productsLoading}
+          error={productsError}
           onPurchase={handlePurchase}
           onRequestProduct={() => setShowRequestModal(true)}
           onNavigateHome={() => setCurrentPage('home')}
@@ -238,6 +253,15 @@ function App() {
           setBackgroundSettings={setBackgroundSettings}
         />
       </div>
+    );
+  }
+
+  if (currentPage === 'privacy' || currentPage === 'terms') {
+    return (
+      <LegalPage
+        page={currentPage}
+        onNavigateHome={() => setCurrentPage('home')}
+      />
     );
   }
 
@@ -305,7 +329,10 @@ function App() {
 
         {/* Footer */}
         <div id="footer">
-          <Footer onNavigateAdmin={handleNavigateToAdmin} />
+          <Footer
+            onNavigateAdmin={handleNavigateToAdmin}
+            onNavigateLegal={handleNavigateToLegal}
+          />
         </div>
       </div>
 
