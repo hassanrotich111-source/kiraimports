@@ -14,9 +14,10 @@ import {
 
 interface FooterProps {
   onNavigateAdmin?: () => void;
+  onNavigateLegal?: (page: 'privacy' | 'terms') => void;
 }
 
-export default function Footer({ onNavigateAdmin }: FooterProps) {
+export default function Footer({ onNavigateAdmin, onNavigateLegal }: FooterProps) {
   const marqueeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -161,13 +162,14 @@ export default function Footer({ onNavigateAdmin }: FooterProps) {
           </p>
           <div className="flex items-center gap-4">
             {footerConfig.bottomLinks.map((link, index) => (
-              <a
+              <button
                 key={index}
-                href={link.href}
+                type="button"
+                onClick={() => onNavigateLegal?.(link.href === '#terms' ? 'terms' : 'privacy')}
                 className="text-xs text-white/50 hover:text-white transition-colors"
               >
                 {link.label}
-              </a>
+              </button>
             ))}
           </div>
         </div>
