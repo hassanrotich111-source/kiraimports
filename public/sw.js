@@ -1,9 +1,9 @@
-const CACHE_NAME = 'kira-imports-v1';
+const CACHE_NAME = 'kira-imports-v2';
 const ASSETS_TO_CACHE = [
-  '/kiraimports/',
-  '/kiraimports/index.html',
-  '/kiraimports/icons/icon-192x192.png',
-  '/kiraimports/icons/icon-512x512.png'
+  '/',
+  '/index.html',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png'
 ];
 
 // Install - cache basic assets
@@ -51,9 +51,9 @@ self.addEventListener('fetch', (event) => {
         });
         return response;
       }).catch(() => {
-        // If offline and not cached, show offline page
+        // If offline and not cached, show the cached app shell
         if (event.request.mode === 'navigate') {
-          return caches.match('/kiraimports/');
+          return caches.match('/');
         }
       });
     })
