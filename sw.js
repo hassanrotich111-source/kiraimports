@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kira-imports-v2';
+const CACHE_NAME = 'kira-imports-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -6,7 +6,7 @@ const ASSETS_TO_CACHE = [
   '/icons/icon-512x512.png'
 ];
 
-// Install - cache basic assets
+// Install - cache fresh basic assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -17,41 +17,41 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate - clean old caches
+// Activate - clear every old cache for this origin, then take control immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
+      return Promise.all(cacheNames.map((name) => caches.delete(name)));
+    }).then(() => {
+      return caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE));
     }).then(() => {
       self.clients.claim();
     })
   );
 });
 
-// Fetch - serve from cache, fallback to network
+// Fetch - prefer network so visitors see the newest deployment, fallback to cache offline
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((response) => {
-        // Don't cache non-success responses
-        if (!response || response.status !== 200) {
-          return response;
-        }
-        // Clone and cache the response
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
+    fetch(event.request).then((response) => {
+      if (!response || response.status !== 200) {
         return response;
-      }).catch(() => {
-        // If offline and not cached, show the cached app shell
+      }
+
+      const responseToCache = response.clone();
+      caches.open(CACHE_NAME).then((cache) => {
+        cache.put(event.request, responseToCache);
+      });
+      return response;
+    }).catch(() => {
+      return caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
         if (event.request.mode === 'navigate') {
           return caches.match('/');
         }
