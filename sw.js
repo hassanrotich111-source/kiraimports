@@ -1,53 +1,61 @@
-const CACHE_VERSION = '2';
-const CACHE_NAME = `kira-imports-v${CACHE_VERSION}`;
+const CACHE_NAME = 'kira-imports-v2';
+const ASSETS_TO_CACHE = [
+  '/',
+  '/index.html',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png'
+];
 
-// Always fetch fresh content, only cache as fallback
+// Install - cache basic assets
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing version', CACHE_VERSION);
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll([
-        '/',
-        '/index.html',
-        '/images/logo.jpeg'
-      ]);
+      return cache.addAll(ASSETS_TO_CACHE);
+    }).then(() => {
+      self.skipWaiting();
     })
   );
-  self.skipWaiting();
 });
 
-// Activate: delete old caches
+// Activate - clean old caches
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating version', CACHE_VERSION);
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
           .filter((name) => name !== CACHE_NAME)
-          .map((name) => {
-            console.log('[SW] Deleting old cache:', name);
-            return caches.delete(name);
-          })
+          .map((name) => caches.delete(name))
       );
-    }).then(() => self.clients.claim())
+    }).then(() => {
+      self.clients.claim();
+    })
   );
 });
 
-// Fetch: network first, cache fallback - ALWAYS get fresh content
+// Fetch - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Update cache with fresh response
-        const responseClone = response.clone();
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).then((response) => {
+        // Don't cache non-success responses
+        if (!response || response.status !== 200) {
+          return response;
+        }
+        // Clone and cache the response
+        const responseToCache = response.clone();
         caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
+          cache.put(event.request, responseToCache);
         });
         return response;
-      })
-      .catch(() => {
-        // Fallback to cache if offline
-        return caches.match(event.request);
-      })
+      }).catch(() => {
+        // If offline and not cached, show the cached app shell
+        if (event.request.mode === 'navigate') {
+          return caches.match('/');
+        }
+      });
+    })
   );
 });
